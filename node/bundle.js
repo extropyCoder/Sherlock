@@ -20954,6 +20954,9 @@ exports.createContext = Script.createContext = function (context) {
 var Web3 = require("web3");
 var trackAddress = ["0x304a554a310c7e546dfe434669c62820b7d83490","0x304a554a310c7e546dfe434669c62820b7d83490","0xe592ac96747db16337ac8f2e9d1e3dc8fd8bcca7"];
 
+var excludeAddress = ["0x204a554a310c7e546dfe434669c62820b7d83490"];
+
+
 function saveAndDisplay(block,transaction){
 addToArray(transaction.from);
 addToArray(transaction.to);
@@ -20974,7 +20977,7 @@ addToArray(transaction.to);
 }
 
 function addToArray(address){
-  if (trackAddress.indexOf(address) != -1) {
+  if ((excludeAddress.indexOf(address)==-1) && (trackAddress.indexOf(address) != -1)) {
     trackAddress.push(address);
   }
 }
@@ -21010,7 +21013,16 @@ function getTransactionsForAccount(startBlockNumber, endBlockNumber) {
   return 0;
 }
 
-web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+// mist loading proposal https://gist.github.com/frozeman/fbc7465d0b0e6c1c4c23
+if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
+  provider = web3.currentProvider; // Keep provider info given from mist `web3` object
+  web3 = new Web3;                 // Re-instantiate `web3` using `Web3` from Dapp
+}else{
+  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));         // Define and instantiate `web3` if accessed from web browser
+  window.web3 = web3;
+}
+
+
 console.log("Starting Search");
 var eth = web3.eth;
 

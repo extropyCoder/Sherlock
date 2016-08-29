@@ -24,7 +24,7 @@ addToArray(transaction.to);
 }
 
 function addToArray(address){
-  if ((excludeAddress.indexOf(address)==-1 && (trackAddress.indexOf(address) != -1)) {
+  if ((excludeAddress.indexOf(address)==-1) && (trackAddress.indexOf(address) != -1)) {
     trackAddress.push(address);
   }
 }
@@ -65,10 +65,10 @@ if(typeof web3 !== 'undefined'){   // eg: If accessed via mist
   provider = web3.currentProvider; // Keep provider info given from mist `web3` object
   web3 = new Web3;                 // Re-instantiate `web3` using `Web3` from Dapp
 }else{
-  provider = new Web3.providers.HttpProvider("http://localhost:8545");
-  let web3 = new Web3;             // Define and instantiate `web3` if accessed from web browser
+  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));         // Define and instantiate `web3` if accessed from web browser
   window.web3 = web3;
 }
+
 
 console.log("Starting Search");
 var eth = web3.eth;
