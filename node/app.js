@@ -3,6 +3,11 @@ var trackAddress = ["0x304a554a310c7e546dfe434669c62820b7d83490","0x304a554a310c
 
 var excludeAddress = ["0x204a554a310c7e546dfe434669c62820b7d83490"];
 
+function setStatus(message) {
+  var status = document.getElementById("status");
+  status.innerHTML = message;
+};
+
 
 function saveAndDisplay(block,transaction){
 addToArray(transaction.from);
@@ -39,16 +44,15 @@ function getTransactionsForAccount(startBlockNumber, endBlockNumber) {
     console.log("Using startBlockNumber: " + startBlockNumber);
   }
   console.log("Searching for transactions to/from account within blocks "  + startBlockNumber + " and " + endBlockNumber);
-
+  setStatus("Searching");
   for (var i = startBlockNumber; i <= endBlockNumber; i++) {
-     if (i % 1000 == 0) {
+     if (i % 500 == 0) {
        console.log("Searching block " + i);
      }
     var block = eth.getBlock(i, true);
     if (block != null && block.transactions != null) {
         //console.log("got trans");
         block.transactions.forEach( function(e) {
-
               if ((trackAddress.indexOf(e.from)!=-1)|| (trackAddress.indexOf(e.to)!=-1)){
                   saveAndDisplay(block,e);
                 }
@@ -56,7 +60,7 @@ function getTransactionsForAccount(startBlockNumber, endBlockNumber) {
               })
     }
     }
-
+    setStatus("Finished");
   return 0;
 }
 
